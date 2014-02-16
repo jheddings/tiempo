@@ -1,0 +1,56 @@
+#!/bin/sh
+#
+# tiempo.exe: Tiempo Scheduler
+#
+# chkconfig: 345 95 5
+# processname: Tiempo.Service.exe
+# description: Tiempo Scheduler
+# pidfile: /var/run/tiempo/tiempo.pid
+
+NAME="tiempo"
+CONF="/etc/tiempo.conf"
+DAEMON="/usr/local/lib/tiempo/Tiempo.Service.exe"
+DESC="Tiempo Scheduler"
+RUNDAT="/var/run/tiempo"
+PIDFILE="$RUNDAT/tiempo.pid"
+START="mono-service -l:$PIDFILE -d:$RUNDAT"
+
+[ -f $CONF ] || exit 1
+[ -x $DAEMON ] || exit 1
+
+mkdir -p $RUNDAT
+
+case "$1" in
+  start)
+    echo -n "Starting $DESC: "
+    $START $DAEMON -f $CONF
+    echo "$NAME"
+    ;;
+
+  stop)
+    echo -n "Stopping $DESC: "
+    if [ -f $PIDFILE ] ; then
+      kill `cat $PIDFILE`
+    fi
+    echo "$NAME"
+    ;;
+
+  restart) $0 stop && $0 start ;;
+
+  reload)
+    echo -n "Reloading $DESC: "
+    if [ -f $PIDFILE ] ; then
+      kill -HUP `cat $PIDFILE`
+      echo "$NAME"
+    else
+      echo "PID file not found!"
+    fi
+    ;;
+
+  *)
+    echo "Usage: $0 {start|stop|restart|reload}" >&2
+    exit 1
+    ;;
+esac
+
+exit 0

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+  <xs:element name="tiempo">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="task" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- ======== CORE ELEMENTS ======== -->
+
+  <xs:element name="task">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="condition" />
+        <xs:element minOccurs="0" ref="commands" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="condition">
+    <xs:complexType>
+      <xs:choice>
+        <xs:element ref="cron" />
+        <xs:element ref="sunset" />
+        <xs:element ref="sunrise" />
+        <xs:element ref="time" />
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="commands">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="exec" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- ======== CONDITIONS ======== -->
+  
+  <xs:element name="cron" type="xs:string" />
+
+  <xs:element name="time" type="xs:time" />
+
+  <xs:element name="sunset">
+    <xs:complexType>
+      <xs:attribute name="offset" type="xs:integer" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="sunrise">
+    <xs:complexType>
+      <xs:attribute name="offset" type="xs:integer" />
+    </xs:complexType>
+  </xs:element>
+
+  <!-- ======== COMMANDS ======== -->
+
+  <xs:element name="exec" type="xs:string" />
+
+</xs:schema>
